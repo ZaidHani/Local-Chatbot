@@ -8,7 +8,7 @@ OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL")
 
 chat = ChatOllama(
     base_url=OLLAMA_BASE_URL,
-    model="gemma3:270m",
+    model="deepseek-r1:1.5b",
     temperature=0.0
 )
 
