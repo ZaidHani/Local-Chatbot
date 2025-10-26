@@ -22,6 +22,7 @@ def timer(func):
 
 local_chat = ChatOllama(
     base_url=os.getenv("OLLAMA_BASE_URL"),
+    # THESE MODELS ARE VERY STUIPED, USE WITH CAUTION
     # model="deepseek-r1:1.5b",
     # model="gemma3:270m",
     model = 'deepseek-r1:1.5b-qwen-distill-q4_K_M',
