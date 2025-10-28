@@ -8,6 +8,7 @@ from langchain_ollama import OllamaEmbeddings
 import os
 import glob
 from dotenv import load_dotenv
+import streamlit as st
 
 load_dotenv()
 
@@ -16,6 +17,7 @@ embedding_model = OllamaEmbeddings(
     model="embeddinggemma",
 )
 
+# this function works wonders for pdf files that are only made of text, not images.
 def load_documents(file_path: str) -> list[Document]:
     print('Loading PDF Documents...')
     
@@ -23,33 +25,45 @@ def load_documents(file_path: str) -> list[Document]:
 
     return loader.load()
 
+def load_image_documents(file_path: str) -> list[Document]:
+    print('Loading Image-based PDF Documents...')
+
+    pdf_files = glob.glob(os.path.join(file_path, '*.pdf'))
+    documents = []
+
+    for file in pdf_files:
+        loader = PyMuPDFLoader(file)
+        documents.extend(loader.load())
+
+    return documents
+
 def split_documents(documents: list[Document]) -> list[Document]:
     print('Splitting Documents...')
 
     text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=500,
+    chunk_size=1000,
     chunk_overlap=200,
     )
 
     return text_splitter.split_documents(documents)
 
-def create_vectorstore(documents_chunks: list[Document]) -> None:
-    print('Creating Vector Store...')
+# def create_vectorstore(documents_chunks: list[Document]) -> None:
+#     print('Creating Vector Store...')
 
-    vectorstore = FAISS.from_documents(
-        documents=documents_chunks,
-        embedding=embedding_model,
-    )
+#     vectorstore = FAISS.from_documents(
+#         documents=documents_chunks,
+#         embedding=embedding_model,
+#     )
 
-    return vectorstore
+#     return vectorstore
 
-def save_embeddings(vectorstore: FAISS, file_path: str) -> None:
-    print('Saving Embeddings...')
+# def save_embeddings(vectorstore: FAISS, file_path: str) -> None:
+#     print('Saving Embeddings...')
 
-    vectorstore.save_local(file_path)
+#     vectorstore.save_local(file_path)
 
 if __name__ == "__main__":
-    docs = load_documents('./data/')
+    docs = load_image_documents('./data/')
     docs_chunks = split_documents(docs)
-    vectorstore = create_vectorstore(docs_chunks)
-    save_embeddings(vectorstore, './data/embeddings/')
+    for doc in docs_chunks:
+        st.write(doc)
