@@ -1,22 +1,21 @@
 import streamlit as st
-import chat
-import prompt
-import vectorizor
-from langchain_core.runnables import RunnablePassthrough
-from langchain_core.output_parsers import StrOutputParser
-from langchain_community.vectorstores import FAISS
+import time
+from chat import chain, llm
 
-vector_store = FAISS.load_local("./data/embeddings/", embeddings=vectorizor.embedding_model, allow_dangerous_deserialization=True)
+st.set_page_config(page_title="Multimodal RAG Chatbot", page_icon="🤖")
+st.title("Multimodal RAG Chatbot")
 
-retriever = vector_store.as_retriever()
+st.write("Ask a question about your documents. Responses use multimodal RAG (text, tables, images).")
+st.write(F'model used for chat: {llm.model}')
 
-llm = chat.groq_chat
 
-rag_chain = (
-    {"context": retriever, "query": RunnablePassthrough()}
-    | prompt.custom_rag_prompt
-    | llm
-    | StrOutputParser()
-)
+user_input = st.text_input("You:", key="user_input")
+submit = st.button("Send")
 
-st.write(rag_chain.invoke("التغطيات داخل المستشفى"))
+if submit and user_input:
+	with st.spinner("Thinking..."):
+		begin_time = time.time()
+		response = chain.invoke(user_input)
+		st.write("Bot:", response)
+		end_time = time.time()
+	st.write(f"_Response time: {end_time - begin_time:.2f} seconds_")
