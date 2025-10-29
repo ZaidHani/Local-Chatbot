@@ -59,6 +59,9 @@ def build_prompt(kwargs):
         ]
     )
 
+# llm = ChatGroq(model="llava-7b-multimodal", base_url=os.getenv("GROQ_API_KEY"))
+llm = ChatOllama(model="llava:latest", base_url=os.getenv("OLLAMA_BASE_URL"))
+
 embeddings = OllamaEmbeddings(
     model="embeddinggemma:latest", 
     base_url=os.getenv("OLLAMA_BASE_URL")
@@ -73,8 +76,7 @@ chain = (
         "question": RunnablePassthrough(),
     }
     | RunnableLambda(build_prompt)
-    | ChatOllama(model="deepseek-r1:1.5b-qwen-distill-q4_K_M", base_url=os.getenv("OLLAMA_BASE_URL"))
-    #| ChatGroq(model="llava-7b-multimodal", base_url=os.getenv("GROQ_API_KEY"))
+    | llm
     | StrOutputParser()
 )
 
@@ -84,8 +86,7 @@ chain_with_sources = {
 } | RunnablePassthrough().assign(
     response=(
         RunnableLambda(build_prompt)
-        | ChatOllama(model="deepseek-r1:1.5b-qwen-distill-q4_K_M", base_url=os.getenv("OLLAMA_BASE_URL"))
-        #| ChatGroq(model="llava-7b-multimodal", base_url=os.getenv("GROQ_API_KEY"))
+        | llm
         | StrOutputParser()
     )
 )

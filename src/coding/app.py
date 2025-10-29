@@ -1,14 +1,13 @@
 import streamlit as st
 import time
-from chat import chain
+from chat import chain, llm
 
 st.set_page_config(page_title="Multimodal RAG Chatbot", page_icon="🤖")
 st.title("Multimodal RAG Chatbot")
 
-if "chat_history" not in st.session_state:
-	st.session_state.chat_history = []
-
 st.write("Ask a question about your documents. Responses use multimodal RAG (text, tables, images).")
+st.write(F'model used for chat: {llm.model}')
+
 
 user_input = st.text_input("You:", key="user_input")
 submit = st.button("Send")
