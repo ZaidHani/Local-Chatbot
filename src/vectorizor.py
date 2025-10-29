@@ -39,6 +39,8 @@ def create_vectorstore(documents_chunks: list[Document]) -> None:
     vectorstore = FAISS.from_documents(
         documents=documents_chunks,
         embedding=embedding_model,
+        index = faiss.IndexFlatL2(768), 
+
     )
 
     return vectorstore
