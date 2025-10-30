@@ -1,6 +1,6 @@
 import streamlit as st
 import time
-from chat import chain, llm
+from chat import chain, llm, chain_with_sources
 
 st.set_page_config(page_title="Multimodal RAG Chatbot", page_icon="🤖")
 st.title("Multimodal RAG Chatbot")
@@ -15,7 +15,7 @@ submit = st.button("Send")
 if submit and user_input:
 	with st.spinner("Thinking..."):
 		begin_time = time.time()
-		response = chain.invoke(user_input)
+		response = chain_with_sources.invoke(user_input)
 		st.write("Bot:", response)
 		end_time = time.time()
 	st.write(f"_Response time: {end_time - begin_time:.2f} seconds_")

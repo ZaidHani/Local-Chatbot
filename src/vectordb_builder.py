@@ -13,6 +13,7 @@ from langchain_community.embeddings import OllamaEmbeddings
 from langchain_core.documents import Document
 import base64
 from IPython.display import Image, display
+import time
 import pickle
 
 load_dotenv()
@@ -24,6 +25,8 @@ def read_pdf_files_from_directory(directory_path:str) -> list:
 
     files = glob.glob(directory_path + "/*.pdf")
 
+    for file in files:
+        print(file)
     for file_path in files:
         chunks = partition_pdf(
             filename=file_path,
@@ -154,7 +157,7 @@ if __name__ == "__main__":
 
     retriever = vectorstore.as_retriever()
 
-    chunks = read_pdf_files_from_directory('../data/pdfs')
+    chunks = read_pdf_files_from_directory('./data')
     tables, texts = separate_tables_and_texts(chunks)
 
     summarize_chain = summarize_chain()
@@ -168,9 +171,10 @@ if __name__ == "__main__":
     tables_html = [table.metadata.text_as_html for table in tables]
     table_summaries = summarize_chain.batch(tables_html, {"max_concurrency": 3})
 
+    start_time = time.time()
     images = get_images_base64(chunks)
     image_summaries = describe_images(images)
-
+    print(F'Image description time: {time.time() - start_time} seconds')
 
     # Add texts
     doc_ids = [str(uuid.uuid4()) for _ in texts]
@@ -179,6 +183,7 @@ if __name__ == "__main__":
     ]
     if summary_texts != []:
         retriever.vectorstore.add_documents(summary_texts)
+    print('Finished Adding Text to the Vector Store.')
 
     # Add tables
     table_ids = [str(uuid.uuid4()) for _ in tables]
@@ -187,6 +192,7 @@ if __name__ == "__main__":
     ]
     if summary_tables != []:
         retriever.vectorstore.add_documents(summary_tables)
+    print('Finished Adding Tables to the Vector Store.')
 
     # Add image summaries
     img_ids = [str(uuid.uuid4()) for _ in images]
@@ -195,3 +201,4 @@ if __name__ == "__main__":
     ]
     if summary_img != []:
         retriever.vectorstore.add_documents(summary_img)
+    print('Finished Adding Image Descriptions to the Vector Store.')
