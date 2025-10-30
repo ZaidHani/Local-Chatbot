@@ -1,7 +1,11 @@
 .env
 
 .venv
-data
+
+*.pdf
+*.pptx
+
+screenshots of responses/
 
 __pycache__/
 *.pyc
