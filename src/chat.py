@@ -8,7 +8,6 @@ from langchain_chroma import Chroma
 import os
 from dotenv import load_dotenv
 from langchain_core.output_parsers import StrOutputParser
-# from langchain_community.embeddings import OllamaEmbeddings
 from langchain_ollama.embeddings import OllamaEmbeddings
 
 load_dotenv()
