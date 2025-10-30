@@ -1,0 +1,10 @@
+Projects/
+.git
+__pycache__/
+.venv/
+venv/
+*.pyc
+.env
+notebooks/
+data/chroma_db/
+data/screenshots of responses/

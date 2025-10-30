@@ -6,7 +6,7 @@ st.set_page_config(page_title="Multimodal RAG Chatbot", page_icon="🤖")
 st.title("Multimodal RAG Chatbot")
 
 st.write("Ask a question about your documents. Responses use multimodal RAG (text, tables, images).")
-st.write(F'model used for chat: {llm.model}')
+# st.write(F'model used for chat: {llm.model}')
 
 
 user_input = st.text_input("You:", key="user_input")
