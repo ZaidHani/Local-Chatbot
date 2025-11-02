@@ -59,8 +59,8 @@ def build_prompt(kwargs):
         ]
     )
 
-# llm = ChatGroq(model="llava-7b-multimodal", base_url=os.getenv("GROQ_API_KEY"))
-llm = ChatOllama(model="llava:latest", base_url=os.getenv("OLLAMA_BASE_URL"))
+llm = ChatGroq(api_key=os.getenv('GROQ_API_KEY'), model='llama-3.3-70b-versatile') 
+# llm = ChatOllama(model="llava:latest", base_url=os.getenv("OLLAMA_BASE_URL"))
 
 embeddings = OllamaEmbeddings(
     model="embeddinggemma:latest", 
